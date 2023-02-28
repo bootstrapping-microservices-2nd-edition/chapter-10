@@ -1,9 +1,17 @@
 # Chapter-10
 
-Code and examples for Chapter 10 of [Bootstrapping Microservices](https://www.bootstrapping-microservices.com/).
+Code example for Chapter 10 of [Bootstrapping Microservices](https://www.bootstrapping-microservices.com/).
 
-The chapter 10 code repository contains the complete working example application: FlixTube. This is what we have been building thoughout the book Bootstrapping Microservices and chapter 10 provides an overview of FlixTube so far.
+The chapter 10 code repository contains the complete working example application: FlixTube. This is what we have been building thoughout the book Bootstrapping Microservices and chapter 10 provides an overview of FlixTube so far, with instructions on how to start, test and deploy it.
 
-Please read chapter 10 for instructions on how to start, test and deploy FlixTube.
+You need Docker and Docker-Compose installed to run this.
+
+Boot FlixTube from your terminal like this:
+
+```bash
+docker-compose up --build
+```
+
+Give it some time to start, then point your browser at http://localhost:4000/
 
 [Click here to support my work](https://www.codecapers.com.au/about#support-my-work)
