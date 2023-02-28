@@ -122,6 +122,9 @@ services:
       - rabbit
     restart: "no"
 
+  # 
+  # Uncomment this service to enable cloud storage.
+  #
   # video-storage:
   #   image: azure-storage
   #   build: 
@@ -139,6 +142,14 @@ services:
   #     - STORAGE_ACCESS_KEY=<your-access-key>
   #   restart: "no"
 
+  #
+  # This is the local version of storage.
+  # Instead of storing files in the cloud it stores files on the
+  # local machine.
+  #
+  # This is "mock" for the storage microservices to make
+  # local testing easier.
+  #
   video-storage:
     image: mock-storage
     build: 
