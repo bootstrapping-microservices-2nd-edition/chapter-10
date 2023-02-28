@@ -1,25 +1,21 @@
 {
-  "name": "chapter-9",
+  "name": "chapter-10",
   "version": "1.0.0",
-  "description": "Code and examples for Chapter 9 of [Bootstrapping Microservices](http://bit.ly/2o0aDsP).",
+  "description": "Code and examples for Chapter 10 of Bootstrapping Microservices.",
   "scripts": {
-    "test:watch": "cypress open",
-    "test": "cypress run"
   },
   "dependencies": {},
   "devDependencies": {
-    "cypress": "^4.4.1",
-    "mongodb": "^3.5.6"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bootstrapping-microservices/chapter-9.git"
+    "url": "git+https://github.com/https://github.com/bootstrapping-microservices-2nd-edition/chapter-10.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bootstrapping-microservices/chapter-9/issues"
+    "url": "https://github.com/bootstrapping-microservices-2nd-edition/chapter-10/issues"
   },
-  "homepage": "https://github.com/bootstrapping-microservices/chapter-9#readme"
+  "homepage": "https://github.com/bootstrapping-microservices-2nd-edition/chapter-10#readme"
 }
