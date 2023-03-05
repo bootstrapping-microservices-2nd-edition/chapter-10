@@ -6,19 +6,14 @@ services:
     container_name: db
     ports:
       - "27017:27017"
-    expose:
-      - "27017"
     restart: always
 
   rabbit:
-    image: rabbitmq:3.8.1-management
+    image: rabbitmq:3.9.21-management
     container_name: rabbit
     ports:
       - "5672:5672"
       - "15672:15672"
-    expose:
-      - "5672"
-      - "15672"
     restart: always
 
   # Service for loading database fixtures.
