@@ -13,3 +13,4 @@ example-1/cypress/fixtures/example.json
 example-1/mock-storage/storage/
 example-1/scripts/terraform.tfstate
 example-1/scripts/terraform.tfstate.backup
+mock-storage/storage
