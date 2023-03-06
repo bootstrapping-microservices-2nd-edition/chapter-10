@@ -14,6 +14,9 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=test
+      - RABBITMQ_DEFAULT_PASS=test
     restart: always
 
   # Service for loading database fixtures.
@@ -49,7 +52,7 @@ services:
       - "4000:80"
     environment:
       - PORT=80
-      - RABBIT=amqp://guest:guest@rabbit:5672
+      - RABBIT=amqp://test:test@rabbit:5672
       - NODE_ENV=development
     depends_on:
       - rabbit
@@ -68,7 +71,7 @@ services:
       - "4001:80"
     environment:
       - PORT=80
-      - RABBIT=amqp://guest:guest@rabbit:5672
+      - RABBIT=amqp://test:test@rabbit:5672
       - NODE_ENV=development
     depends_on:
       - db
@@ -89,7 +92,7 @@ services:
      - "4004:80"
     environment:
       - PORT=80
-      - RABBIT=amqp://guest:guest@rabbit:5672
+      - RABBIT=amqp://test:test@rabbit:5672
       - NODE_ENV=development
     depends_on:
       - rabbit
@@ -108,7 +111,7 @@ services:
      - "4002:80"
     environment:
       - PORT=80
-      - RABBIT=amqp://guest:guest@rabbit:5672
+      - RABBIT=amqp://test:test@rabbit:5672
       - DBHOST=mongodb://db:27017
       - DBNAME=history
       - NODE_ENV=development
@@ -174,7 +177,7 @@ services:
      - "4006:80"
     environment:
       - PORT=80
-      - RABBIT=amqp://guest:guest@rabbit:5672
+      - RABBIT=amqp://test:test@rabbit:5672
       - DBHOST=mongodb://db:27017
       - DBNAME=metadata
       - NODE_ENV=development
