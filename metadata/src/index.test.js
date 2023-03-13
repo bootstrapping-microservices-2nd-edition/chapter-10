@@ -77,7 +77,7 @@ describe("metadata microservice", () => {
     
     test("microservice starts web server on startup", async () => {
         
-        await startMicroservice();
+        await startMicroservice("mongodb://localhost:27017", "metadata-test", "rabbit", 3000);
 
         expect(mockListenFn.mock.calls.length).toEqual(1);     // Check only 1 call to 'listen'.
         expect(mockListenFn.mock.calls[0][0]).toEqual(3000);   // Check for port 3000.
@@ -85,9 +85,7 @@ describe("metadata microservice", () => {
 
     test("/videos route is handled", async () => {
         
-        await startMicroservice();
-
-        expect(mockGetFn).toHaveBeenCalled();
+        await startMicroservice("mongodb://localhost:27017", "metadata-test", "rabbit", 3000);
 
         const videosRoute = mockGetFn.mock.calls[0][0];
         expect(videosRoute).toEqual("/videos");
@@ -95,7 +93,7 @@ describe("metadata microservice", () => {
 
     test("/videos route retreives data via videos collection", async () => {
 
-        await startMicroservice();
+        await startMicroservice("mongodb://localhost:27017", "metadata-test", "rabbit", 3000);
 
         const mockRequest = {};
         const mockJsonFn = jest.fn();

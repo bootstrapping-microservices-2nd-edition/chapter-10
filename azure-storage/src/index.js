@@ -1,7 +1,9 @@
 const express = require("express");
 const azure = require('azure-storage');
 
-const app = express();
+if (!process.env.PORT) {
+    throw new Error("Please specify the port number for the HTTP server with the environment variable PORT.");
+}
 
 if (!process.env.STORAGE_ACCOUNT_NAME) {
     throw new Error("Please specify the name of an Azure storage account in environment variable STORAGE_ACCOUNT_NAME.");
@@ -14,6 +16,7 @@ if (!process.env.STORAGE_ACCESS_KEY) {
     throw new Error("Please specify the access key to an Azure storage account in environment variable STORAGE_ACCESS_KEY.");
 }
 
+const PORT = process.env.PORT;
 const STORAGE_ACCESS_KEY = process.env.STORAGE_ACCESS_KEY;
 const AZURE_STORAGE_CONTAINER_NAME = "videos";
 
@@ -77,44 +80,33 @@ function streamVideoFromAzure(blobService, videoId, res) {
     })
 }
 
+const app = express();
+
 //
 // HTTP GET route to stream a video from Azure storage.
 //
-app.get("/video", (req, res) => {
+app.get("/video", async (req, res) => {
 
     const videoId = req.query.id;
     console.log(`Streaming video ${videoId}.`);
     
     const blobService = createBlobService();
-    streamVideoFromAzure(blobService, videoId, res)
-        .catch(err => {
-            console.error(`Error occurred getting video ${AZURE_STORAGE_CONTAINER_NAME}/${videoId} to stream.`);
-            console.error(err && err.stack || err);
-            res.sendStatus(500);
-        });
+    await streamVideoFromAzure(blobService, videoId, res);
 });
 
 //
 // HTTP POST route to upload a video to Azure storage.
 //
-app.post("/upload", (req, res) => {
+app.post("/upload", async (req, res) => {
 
     const videoId = req.headers.id;
     const mimeType = req.headers["content-type"];
 
     const blobService = createBlobService();
-    uploadStreamToAzure(req, mimeType, videoId, blobService)
-        .then(() => {
-            res.sendStatus(200);
-        })
-        .catch(err => {
-            console.error(`Upload to Azure failed for video ${videoId}.`);
-            console.error(err);
-            res.sendStatus(500);
-        });    
+    await uploadStreamToAzure(req, mimeType, videoId, blobService)
+    res.sendStatus(200);
 });
 
-const port = process.env.PORT && parseInt(process.env.PORT) || 3000;
-app.listen(port, () => {
+app.listen(PORT, () => {
     console.log(`Microservice online`);
 });

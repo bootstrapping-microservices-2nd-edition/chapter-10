@@ -2,10 +2,16 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 
-const app = express();
+if (!process.env.PORT) {
+    throw new Error("Please specify the port number for the HTTP server with the environment variable PORT.");
+}
+
+const PORT = process.env.PORT;
 
 const storagePath = path.join(__dirname, "../storage");
 console.log(`Storing files at ${storagePath}.`);
+
+const app = express();
 
 //
 // HTTP GET route to stream a video from storage.
@@ -35,7 +41,6 @@ app.post("/upload", (req, res) => {
         });
 });
 
-const port = process.env.PORT && parseInt(process.env.PORT) || 3000;
-app.listen(port, () => {
+app.listen(PORT, () => {
     console.log(`Microservice online`);
 });

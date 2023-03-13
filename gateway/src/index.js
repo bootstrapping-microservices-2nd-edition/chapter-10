@@ -2,10 +2,18 @@ const express = require("express");
 const path = require("path");
 const http = require("http");
 
+if (!process.env.PORT) {
+    throw new Error("Please specify the port number for the HTTP server with the environment variable PORT.");
+}
+
+const PORT = process.env.PORT;
+
 //
-// Setup event handlers.
+// Application entry point.
 //
-function setupHandlers(app) {
+async function main() {
+    const app = express();
+
     app.set("views", path.join(__dirname, "views")); // Set directory that contains templates for views.
     app.set("view engine", "hbs"); // Use hbs as the view engine for Express.
     
@@ -92,7 +100,7 @@ function setupHandlers(app) {
         http.request( // Gets the viewing history from the history microservice.
             {
                 host: `history`,
-                path: `/videos`,
+                path: `/history`,
                 method: `GET`,
             },
             (response) => {
@@ -103,7 +111,7 @@ function setupHandlers(app) {
 
                 response.on("end", () => {
                     // Renders the history for display in the browser.
-                    res.render("history", { videos: JSON.parse(data).videos });
+                    res.render("history", { videos: JSON.parse(data).history });
                 });
 
                 response.on("error", err => {
@@ -155,32 +163,13 @@ function setupHandlers(app) {
         
         req.pipe(forwardRequest);
     });
-}
 
-//
-// Start the HTTP server.
-//
-function startHttpServer() {
-    return new Promise(resolve => { // Wrap in a promise so we can be notified when the server has started.
-        const app = express();
-        setupHandlers(app);
-
-        const port = process.env.PORT && parseInt(process.env.PORT) || 3000;
-        app.listen(port, () => {
-            resolve(); // HTTP server is listening, resolve the promise.
-        });
+    app.listen(PORT, () => {
+        console.log("Microservice online.");
     });
 }
 
-//
-// Application entry point.
-//
-function main() {
-    return startHttpServer(); // Start the HTTP server.
-}
-
 main()
-    .then(() => console.log("Microservice online."))
     .catch(err => {
         console.error("Microservice failed to start.");
         console.error(err && err.stack || err);
