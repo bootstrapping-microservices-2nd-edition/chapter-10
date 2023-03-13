@@ -17,6 +17,6 @@
     "wait-port": "^0.2.6"
   },
   "devDependencies": {
-    "nodemon": "^1.19.1"
+    "nodemon": "^2.0.21"
   }
 }
