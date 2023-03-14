@@ -3,16 +3,20 @@
   "version": "1.0.0",
   "description": "Code and examples for Chapter 10 of Bootstrapping Microservices.",
   "scripts": {
+    "test": "playwright test --reporter=list  --workers 1"
   },
   "dependencies": {},
   "devDependencies": {
+    "@playwright/test": "^1.30.0",
+    "axios": "^1.3.1",
+    "mongodb": "^4.8.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/https://github.com/bootstrapping-microservices-2nd-edition/chapter-10.git"
+    "url": "git+https://github.com/bootstrapping-microservices-2nd-edition/chapter-10.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "ashley@codecapers.com.au",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bootstrapping-microservices-2nd-edition/chapter-10/issues"
