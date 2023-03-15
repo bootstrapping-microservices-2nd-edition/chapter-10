@@ -136,8 +136,8 @@ services:
   #    - "4005:80"
   #   environment:
   #     - PORT=80
-  #     - STORAGE_ACCOUNT_NAME=<your-storage-account>
-  #     - STORAGE_ACCESS_KEY=<your-access-key>
+  #     - STORAGE_ACCOUNT_NAME=${STORAGE_ACCOUNT_NAME}
+  #     - STORAGE_ACCESS_KEY=${STORAGE_ACCESS_KEY}
   #   restart: "no"
 
   #
