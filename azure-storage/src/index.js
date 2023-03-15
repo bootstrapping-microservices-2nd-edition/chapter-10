@@ -75,7 +75,10 @@ app.post("/upload", async (req, res) => {
     const contentType = req.headers["content-type"];
 
     const blobService = createBlobService();
-    const containerClient = blobService.getContainerClient(STORAGE_CONTAINER_NAME);
+
+    const containerClient = blobService.getContainerClient(STORAGE_CONTAINER_NAME); 
+    await containerClient.createIfNotExists(); // Creates the container if it doesn't already exist.
+
     const blockBlobClient = containerClient.getBlockBlobClient(videoId);
     await blockBlobClient.uploadStream(req);
     await blockBlobClient.setHTTPHeaders({
