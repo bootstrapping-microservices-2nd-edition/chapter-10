@@ -6,4 +6,6 @@ RUN npm install --only=production
 COPY ./src ./src
 COPY ./public ./public
 
-CMD npm start
+CMD npx wait-port metadata:80 && \
+    npx wait-port history:80 && \
+    npm start

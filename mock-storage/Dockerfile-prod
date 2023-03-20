@@ -4,5 +4,6 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install --only=production
 COPY ./src ./src
+RUN mkdir ./storage
 
 CMD npm start

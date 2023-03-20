@@ -1,0 +1,40 @@
+#
+# To deploy:
+#
+# kubectl apply -f scripts/deploy.yaml
+#
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: video-storage
+  template:
+    metadata:
+      labels:
+        app: video-storage
+    spec:
+      containers: 
+      - name: video-storage
+        image: mock-storage:1
+        imagePullPolicy: Never
+        env:
+        - name: PORT
+          value: "4000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: video-storage
+spec:
+  selector:
+    app: video-storage
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 4000
