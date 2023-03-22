@@ -1,10 +1,6 @@
 # 
 # Remove containers from Kubernetes.
 #
-# Don't forget to change kubectl to your local Kubernetes instance, like this:
-#
-#  kubectl config use-context docker-desktop
-#
 kubectl delete -f rabbit.yaml
 kubectl delete -f mongodb.yaml
 kubectl delete -f metadata.yaml
