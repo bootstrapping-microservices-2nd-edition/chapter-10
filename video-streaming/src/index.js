@@ -17,11 +17,11 @@ const RABBIT = process.env.RABBIT;
 // Application entry point.
 //
 async function main() {
-    const connection = await amqp.connect(RABBIT); // Connect to the RabbitMQ server.
+    const connection = await amqp.connect(RABBIT); // Connects to the RabbitMQ server.
     
-    const messageChannel = await connection.createChannel(); // Create a RabbitMQ messaging channel.
+    const messageChannel = await connection.createChannel(); // Creates a RabbitMQ messaging channel.
     
-    await messageChannel.assertExchange("viewed", "fanout"); // Assert that we have a "viewed" exchange.
+    await messageChannel.assertExchange("viewed", "fanout"); // Asserts that we have a "viewed" exchange.
 
     //
     // Broadcasts the "viewed" message to other microservices.
@@ -31,7 +31,7 @@ async function main() {
             
         const msg = { video: { id: videoId } };
         const jsonMsg = JSON.stringify(msg);
-        messageChannel.publish("viewed", "", Buffer.from(jsonMsg)); // Publish message to the "viewed" exchange.
+        messageChannel.publish("viewed", "", Buffer.from(jsonMsg)); // Publishes message to the "viewed" exchange.
     }
 
     const app = express();
@@ -39,7 +39,7 @@ async function main() {
     app.get("/video", (req, res) => { // Route for streaming video.
         const videoId = req.query.id;
 
-        const forwardRequest = http.request( // Forward the request to the video storage microservice.
+        const forwardRequest = http.request( // Forwards the request to the video storage microservice.
             {
                 host: `video-storage`,
                 path: `/video?id=${videoId}`,
@@ -54,7 +54,7 @@ async function main() {
         
         req.pipe(forwardRequest);
 
-        broadcastViewedMessage(messageChannel, videoId); // Send "viewed" message to indicate this video has been watched.
+        broadcastViewedMessage(messageChannel, videoId); // Sends the "viewed" message to indicate this video has been watched.
     });
 
     app.listen(PORT, () => { // Starts the HTTP server.
