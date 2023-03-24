@@ -61,21 +61,6 @@ async function main() {
     //
     const messageChannel = await messagingConnection.createChannel(); 
 
-    // 
-    // Handler for incoming messages.
-    //
-    async function consumeViewedMessage(msg) {
-        console.log("Received a 'viewed' message");
-
-        const parsedMsg = JSON.parse(msg.content.toString()); // Parse the JSON message.
-        
-        await historyCollection.insertOne({ videoId: parsedMsg.video.id }); // Record the "view" in the database.
-
-        console.log("Acknowledging message was handled.");
-                
-        messageChannel.ack(msg); // If there is no error, acknowledge the message.
-    };
-
     //
     // Asserts that we have a "viewed" exchange.
     //
@@ -96,7 +81,17 @@ async function main() {
     //
     // Start receiving messages from the anonymous queue.
     //
-    await messageChannel.consume(queue, consumeViewedMessage);
+    await messageChannel.consume(queue, async (msg) => {
+        console.log("Received a 'viewed' message");
+
+        const parsedMsg = JSON.parse(msg.content.toString()); // Parse the JSON message.
+        
+        await historyCollection.insertOne({ videoId: parsedMsg.video.id }); // Record the "view" in the database.
+
+        console.log("Acknowledging message was handled.");
+
+        messageChannel.ack(msg); // If there is no error, acknowledge the message.
+    });
 
     //
     // HTTP GET route to retrieve video viewing history.
