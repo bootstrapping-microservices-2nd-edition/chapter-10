@@ -18,8 +18,8 @@ const RABBIT = process.env.RABBIT;
 //  Writes a Node.js stream to a HTTP POST request.
 //
 function streamToHttpPost(inputStream, uploadHost, uploadRoute, headers) {
-    return new Promise((resolve, reject) => { // Wrap the stream in a promise so that we can wait for it to complete.
-        const forwardRequest = http.request( // Forward the request to the video storage microservice.
+    return new Promise((resolve, reject) => { // Wraps the stream in a promise so that we can wait for it to complete.
+        const forwardRequest = http.request( // Forwards the request to the video storage microservice.
             {
                 host: uploadHost,
                 path: uploadRoute,
@@ -42,9 +42,9 @@ function streamToHttpPost(inputStream, uploadHost, uploadRoute, headers) {
 //
 async function main() {
 
-    const messagingConnection = await amqp.connect(RABBIT); // Connect to the RabbitMQ server.
+    const messagingConnection = await amqp.connect(RABBIT); // Connects to the RabbitMQ server.
 
-    const messageChannel = await messagingConnection.createChannel(); // Create a RabbitMQ messaging channel.
+    const messageChannel = await messagingConnection.createChannel(); // Creates a RabbitMQ messaging channel.
 
     const app = express();
 
@@ -56,7 +56,7 @@ async function main() {
             
         const msg = { video: videoMetadata };
         const jsonMsg = JSON.stringify(msg);
-        messageChannel.publish("video-uploaded", "", Buffer.from(jsonMsg)); // Publish message to the "video-uploaded" exchange.
+        messageChannel.publish("video-uploaded", "", Buffer.from(jsonMsg)); // Publishes the message to the "video-uploaded" exchange.
     }
 
     //
@@ -64,13 +64,13 @@ async function main() {
     //
     app.post("/upload", async (req, res) => {
         const fileName = req.headers["file-name"];
-        const videoId = new mongodb.ObjectId(); // Create a new unique ID for the video.
+        const videoId = new mongodb.ObjectId(); // Creates a new unique ID for the video.
         const newHeaders = Object.assign({}, req.headers, { id: videoId });
         await streamToHttpPost(req, `video-storage`, `/upload`, newHeaders)
 
         res.sendStatus(200);
 
-        // Broadcast message to other microservices.
+        // Broadcasts the message to other microservices.
         broadcastVideoUploadedMessage({ id: videoId, name: fileName });
     });
 
