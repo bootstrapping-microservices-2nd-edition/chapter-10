@@ -52,7 +52,7 @@ async function main() {
     const historyCollection = db.collection("history");
     
     //
-    // Connect to the RabbitMQ server.
+    // Connects to the RabbitMQ server.
     //
     const messagingConnection = await amqp.connect(RABBIT); 
 
@@ -99,11 +99,11 @@ async function main() {
     await messageChannel.consume(queue, consumeViewedMessage);
 
     //
-    // HTTP GET API to retrieve video viewing history.
+    // HTTP GET route to retrieve video viewing history.
     //
     app.get("/history", async (req, res) => {
         //
-        // Retreive viewing history from database.
+        // Retreives viewing history from database.
         // In a real application this should be paginated.
         //
         const history = await historyCollection.find().toArray(); 
