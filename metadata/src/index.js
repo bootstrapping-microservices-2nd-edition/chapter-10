@@ -4,14 +4,14 @@ const amqp = require('amqplib');
 const bodyParser = require("body-parser");
 
 //
-// Collect code here that executes when the microservice starts.
+// Starts the microservice.
 //
 async function startMicroservice(dbHost, dbName, rabbitHost, port) {
     const client = await mongodb.MongoClient.connect(dbHost, { useUnifiedTopology: true });  // Connects to the database.
     const db = client.db(dbName);
 
-    const messagingConnection = await amqp.connect(rabbitHost) // Connect to the RabbitMQ server.
-    const messageChannel = await messagingConnection.createChannel(); // Create a RabbitMQ messaging channel.
+    const messagingConnection = await amqp.connect(rabbitHost) // Connects to the RabbitMQ server.
+    const messageChannel = await messagingConnection.createChannel(); // Creates a RabbitMQ messaging channel.
 
     const app = express();
     app.use(bodyParser.json()); // Enable JSON body for HTTP requests.
@@ -19,7 +19,7 @@ async function startMicroservice(dbHost, dbName, rabbitHost, port) {
     const videosCollection = db.collection("videos");
 
     //
-    // HTTP GET API to retrieve list of videos from the database.
+    // HTTP GET route to retrieve list of videos from the database.
     //
     app.get("/videos", async (req, res) => {
         const videos = await videosCollection.find().toArray() // In a real application this should be paginated.
@@ -29,7 +29,7 @@ async function startMicroservice(dbHost, dbName, rabbitHost, port) {
     });
 
     //
-    // HTTP GET API to retreive details for a particular video.
+    // HTTP GET route to retreive details for a particular video.
     //
     app.get("/video", async (req, res) => {
         const videoId = new mongodb.ObjectId(req.query.id);
@@ -43,19 +43,19 @@ async function startMicroservice(dbHost, dbName, rabbitHost, port) {
     });
     
     //
-    // Handler forcoming RabbitMQ messages.
+    // Handles incoming RabbitMQ messages.
     //
     async function consumeVideoUploadedMessage(msg) { 
         console.log("Received a 'viewed-uploaded' message");
 
-        const parsedMsg = JSON.parse(msg.content.toString()); // Parse the JSON message.
+        const parsedMsg = JSON.parse(msg.content.toString()); // Parses the JSON message.
 
         const videoMetadata = {
             _id: new mongodb.ObjectId(parsedMsg.video.id),
             name: parsedMsg.video.name,
         };
         
-        await videosCollection.insertOne(videoMetadata) // Record the metadata for the video.
+        await videosCollection.insertOne(videoMetadata) // Records the metadata for the video.
 
         console.log("Acknowledging message was handled.");
         messageChannel.ack(msg); // If there is no error, acknowledge the message.
@@ -63,12 +63,12 @@ async function startMicroservice(dbHost, dbName, rabbitHost, port) {
 
     // Add other handlers here.
 
-    await messageChannel.assertExchange("video-uploaded", "fanout") // Assert that we have a "video-uploaded" exchange.
+    await messageChannel.assertExchange("video-uploaded", "fanout") // Asserts that we have a "video-uploaded" exchange.
 
-    const { queue } = await messageChannel.assertQueue("", {}); // Create an anonyous queue.
-    await messageChannel.bindQueue(queue, "video-uploaded", "") // Bind the queue to the exchange.
+    const { queue } = await messageChannel.assertQueue("", {}); // Creates an anonyous queue.
+    await messageChannel.bindQueue(queue, "video-uploaded", "") // Binds the queue to the exchange.
 
-    await messageChannel.consume(queue, consumeVideoUploadedMessage); // Start receiving messages from the anonymous queue.
+    await messageChannel.consume(queue, consumeVideoUploadedMessage); // Starts receiving messages from the anonymous queue.
 
     app.listen(port, () => { // Starts the HTTP server.
         console.log("Microservice online.");
