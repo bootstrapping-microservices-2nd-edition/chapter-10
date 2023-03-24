@@ -124,7 +124,7 @@ async function main() {
     });
 
     //
-    // HTTP GET API to stream video to the user's browser.
+    // HTTP GET route that streams video to the user's browser.
     //
     app.get("/api/video", (req, res) => {
         
@@ -144,7 +144,7 @@ async function main() {
     });
 
     //
-    // HTTP POST API to upload video from the user's browser.
+    // HTTP POST route to upload video from the user's browser.
     //
     app.post("/api/upload", (req, res) => {
 
