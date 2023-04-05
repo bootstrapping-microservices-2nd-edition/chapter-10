@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const http = require("http");
+const axios = require("axios");
 
 if (!process.env.PORT) {
     throw new Error("Please specify the port number for the HTTP server with the environment variable PORT.");
@@ -22,68 +22,32 @@ async function main() {
     //
     // Main web page that lists videos.
     //
-    app.get("/", (req, res) => {
-        http.request( // Get the list of videos from the metadata microservice.
-            {
-                host: `metadata`,
-                path: `/videos`,
-                method: `GET`,
-            },
-            (response) => {
-                let data = "";
-                response.on("data", chunk => {
-                    data += chunk;
-                });
+    app.get("/", async (req, res) => {
 
-                response.on("end", () => {
-                    // Renders the video list for display in the browser.
-                    res.render("video-list", { videos: JSON.parse(data).videos });
-                });
+        // Retreives the list of videos from the metadata microservice.
+        const videosResponse = await axios.get("http://metadata/videos");
 
-                response.on("error", err => {
-                    console.error("Failed to get video list.");
-                    console.error(err || `Status code: ${response.statusCode}`);
-                    res.sendStatus(500);
-                });
-            }
-        ).end();
+        // Renders the video list for display in the browser.
+        res.render("video-list", { videos: videosResponse.data.videos });
     });
 
     //
     // Web page to play a particular video.
     //
-    app.get("/video", (req, res) => {
+    app.get("/video", async (req, res) => {
+
         const videoId = req.query.id;
-        http.request( // Get a particular video from the metadata microservice.
-            {
-                host: `metadata`,
-                path: `/video?id=${videoId}`,
-                method: `GET`,
-            },
-            (response) => {
-                let data = "";
-                response.on("data", chunk => {
-                    data += chunk;
-                });
 
-                response.on("end", () => {
-                    const metadata = JSON.parse(data).video;
-                    const video = {
-                        metadata,
-                        url: `/api/video?id=${videoId}`,
-                    };
-                    
-                    // Renders the video for display in the browser.
-                    res.render("play-video", { video });
-                });
+        // Retreives the data from the metdata microservice.
+        const videoResponse = await axios.get(`http://metadata/video?id=${videoId}`);
 
-                response.on("error", err => {
-                    console.error(`Failed to get details for video ${videoId}.`);
-                    console.error(err || `Status code: ${response.statusCode}`);
-                    res.sendStatus(500);
-                });
-            }
-        ).end();
+        const video = {
+            metadata: videoResponse.data.video,
+            url: `/api/video?id=${videoId}`,
+        };
+        
+        // Renders the video for display in the browser.
+        res.render("play-video", { video });
     });
 
     //
@@ -96,72 +60,46 @@ async function main() {
     //
     // Web page to show the users viewing history.
     //
-    app.get("/history", (req, res) => {
-        http.request( // Gets the viewing history from the history microservice.
-            {
-                host: `history`,
-                path: `/history`,
-                method: `GET`,
-            },
-            (response) => {
-                let data = "";
-                response.on("data", chunk => {
-                    data += chunk;
-                });
+    app.get("/history", async (req, res) => {
 
-                response.on("end", () => {
-                    // Renders the history for display in the browser.
-                    res.render("history", { videos: JSON.parse(data).history });
-                });
+        // Retreives the data from the history microservice.
+        const historyResponse = await axios.get("http://history/history");
 
-                response.on("error", err => {
-                    console.error("Failed to get history.");
-                    console.error(err || `Status code: ${response.statusCode}`);
-                    res.sendStatus(500);
-                });
-            }
-        ).end();
+        // Renders the history for display in the browser.
+        res.render("history", { videos: historyResponse.data.history });
     });
 
     //
     // HTTP GET route that streams video to the user's browser.
     //
-    app.get("/api/video", (req, res) => {
-        
-        const forwardRequest = http.request( // Forward the request to the video streaming microservice.
-            {
-                host: `video-streaming`,
-                path: `/video?id=${req.query.id}`,
-                method: 'GET',
-            }, 
-            forwardResponse => {
-                res.writeHeader(forwardResponse.statusCode, forwardResponse.headers);
-                forwardResponse.pipe(res);
-            }
-        );
-        
-        req.pipe(forwardRequest);
+    app.get("/api/video", async (req, res) => {
+
+        const response = await axios({ // Forwards the request to the video-streaming microservice.
+            method: "GET",
+            url: `http://video-streaming/video?id=${req.query.id}`, 
+            data: req, 
+            responseType: "stream",
+        });
+        response.data.pipe(res);
+      
     });
 
     //
     // HTTP POST route to upload video from the user's browser.
     //
-    app.post("/api/upload", (req, res) => {
+    app.post("/api/upload", async (req, res) => {
 
-        const forwardRequest = http.request( // Forward the request to the video streaming microservice.
-            {
-                host: `video-upload`,
-                path: `/upload`,
-                method: 'POST',
-                headers: req.headers,
-            }, 
-            forwardResponse => {
-                res.writeHeader(forwardResponse.statusCode, forwardResponse.headers);
-                forwardResponse.pipe(res);
-            }
-        );
-        
-        req.pipe(forwardRequest);
+        const response = await axios({ // Forwards the request to the video-upload microservice.
+            method: "POST",
+            url: "http://video-upload/upload", 
+            data: req, 
+            responseType: "stream",
+            headers: {
+                "content-type": req.headers["content-type"],
+                "file-name": req.headers["file-name"],
+            },
+        });
+        response.data.pipe(res);
     });
 
     app.listen(PORT, () => {

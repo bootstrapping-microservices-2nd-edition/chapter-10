@@ -1,6 +1,6 @@
 const express = require("express");
 const amqp = require('amqplib');
-const http = require("http");
+const axios = require("axios");
 
 if (!process.env.PORT) {
     throw new Error("Please specify the port number for the HTTP server with the environment variable PORT.");
@@ -36,23 +36,16 @@ async function main() {
 
     const app = express();
 
-    app.get("/video", (req, res) => { // Route for streaming video.
-        const videoId = req.query.id;
+    app.get("/video", async (req, res) => { // Route for streaming video.
 
-        const forwardRequest = http.request( // Forwards the request to the video storage microservice.
-            {
-                host: `video-storage`,
-                path: `/video?id=${videoId}`,
-                method: 'GET',
-                headers: req.headers,
-            }, 
-            forwardResponse => {
-                res.writeHeader(forwardResponse.statusCode, forwardResponse.headers);
-                forwardResponse.pipe(res);
-            }
-        );
-        
-        req.pipe(forwardRequest);
+        const videoId = req.query.id;
+        const response = await axios({ // Forwards the request to the video-storage microservice.
+            method: "GET",
+            url: `http://video-storage/video?id=${videoId}`, 
+            data: req, 
+            responseType: "stream",
+        });
+        response.data.pipe(res);
 
         broadcastViewedMessage(messageChannel, videoId); // Sends the "viewed" message to indicate this video has been watched.
     });
