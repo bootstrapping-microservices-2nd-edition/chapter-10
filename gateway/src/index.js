@@ -81,7 +81,6 @@ async function main() {
             responseType: "stream",
         });
         response.data.pipe(res);
-      
     });
 
     //
