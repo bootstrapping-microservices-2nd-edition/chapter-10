@@ -1,4 +1,12 @@
 #
+# Builds and deploys all microservices to a local Kubernetes instance.
+#
+# Usage:
+#
+#   ./scripts/local-kub/deploy.sh
+#
+
+#
 # Build Docker images.
 #
 docker build -t metadata:1 --file ../../metadata/Dockerfile-prod ../../metadata

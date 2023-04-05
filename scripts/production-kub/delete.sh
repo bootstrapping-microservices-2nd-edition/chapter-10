@@ -1,6 +1,11 @@
 # 
 # Remove containers from Kubernetes.
 #
+# Usage:
+#
+#   ./scripts/production-kub/delete.sh
+#
+
 kubectl delete -f rabbit.yaml
 kubectl delete -f mongodb.yaml
 envsubst < metadata.yaml | kubectl delete -f -

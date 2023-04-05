@@ -1,3 +1,11 @@
+#
+# Builds, publishes and deploys all microservices to a production Kubernetes instance.
+#
+# Usage:
+#
+#   ./scripts/production-kub/deploy.sh
+#
+
 set -u # or set -o nounset
 : "$CONTAINER_REGISTRY"
 
