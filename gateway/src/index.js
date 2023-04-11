@@ -38,7 +38,7 @@ async function main() {
 
         const videoId = req.query.id;
 
-        // Retreives the data from the metdata microservice.
+        // Retreives the data from the metadata microservice.
         const videoResponse = await axios.get(`http://metadata/video?id=${videoId}`);
 
         const video = {
