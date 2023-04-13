@@ -7,6 +7,7 @@
 #
 #   CONTAINER_REGISTRY - The hostname of your container registry.
 #   NAME - The name of the microservice to deploy.
+#   VERSION - The version of the microservice being deployed.
 #
 # Usage:
 #
@@ -16,5 +17,6 @@
 set -u # or set -o nounset
 : "$CONTAINER_REGISTRY"
 : "$NAME"
+: "$VERSION"
 
 envsubst < ./scripts/cd/${NAME}.yaml | kubectl apply -f -
