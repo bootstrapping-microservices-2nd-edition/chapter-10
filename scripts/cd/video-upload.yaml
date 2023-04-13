@@ -20,7 +20,7 @@ spec:
     spec:
       containers: 
       - name: video-upload
-        image: $CONTAINER_REGISTRY/video-upload:1
+        image: $CONTAINER_REGISTRY/video-upload:$VERSION
         imagePullPolicy: IfNotPresent
         env:
         - name: PORT

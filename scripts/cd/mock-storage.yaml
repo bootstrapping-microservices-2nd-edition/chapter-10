@@ -20,7 +20,7 @@ spec:
     spec:
       containers: 
       - name: video-storage
-        image: $CONTAINER_REGISTRY/mock-storage:1
+        image: $CONTAINER_REGISTRY/mock-storage:$VERSION
         imagePullPolicy: IfNotPresent
         env:
         - name: PORT

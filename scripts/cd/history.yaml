@@ -20,7 +20,7 @@ spec:
     spec:
       containers: 
       - name: history
-        image: $CONTAINER_REGISTRY/history:1
+        image: $CONTAINER_REGISTRY/history:$VERSION
         imagePullPolicy: IfNotPresent
         env:
         - name: PORT
