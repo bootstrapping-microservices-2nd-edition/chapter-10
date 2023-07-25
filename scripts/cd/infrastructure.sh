@@ -1,5 +1,5 @@
 #
-# Deploy infrastrucgture
+# Deploy infrastructure
 #
 # Usage:
 #
