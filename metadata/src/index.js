@@ -9,6 +9,7 @@ const bodyParser = require("body-parser");
 async function startMicroservice(dbHost, dbName, rabbitHost, port) {
     const client = await mongodb.MongoClient.connect(dbHost, { useUnifiedTopology: true });  // Connects to the database.
     const db = client.db(dbName);
+    const videosCollection = db.collection("videos");
 
     const messagingConnection = await amqp.connect(rabbitHost) // Connects to the RabbitMQ server.
     const messageChannel = await messagingConnection.createChannel(); // Creates a RabbitMQ messaging channel.
@@ -16,13 +17,12 @@ async function startMicroservice(dbHost, dbName, rabbitHost, port) {
     const app = express();
     app.use(bodyParser.json()); // Enable JSON body for HTTP requests.
 
-    const videosCollection = db.collection("videos");
 
     //
     // HTTP GET route to retrieve list of videos from the database.
     //
     app.get("/videos", async (req, res) => {
-        const videos = await videosCollection.find().toArray() // In a real application this should be paginated.
+        const videos = await videosCollection.find().toArray(); // In a real application this should be paginated.
         res.json({
             videos: videos
         });

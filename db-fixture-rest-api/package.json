@@ -26,7 +26,7 @@
     "express": "^5.0.0-beta.1",
     "globby": "^9.1.0",
     "mongodb": "^4.8.0",
-    "node-mongodb-fixtures": "^2.2.1",
+    "node-mongodb-fixtures": "^3.2.9",
     "nodemon": "^2.0.21"
   },
   "private": true
