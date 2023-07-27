@@ -84,7 +84,7 @@ To use this REST API to help test your own project please customize it by settin
 - FIXTURES_DIR - Set the location of the fixtures directory (defaults to 'fixtures').
 - PORT - Set the port number of the REST API (defaults to 3555).
 - DBHOST - Set the host address for the MongoDB server instance (defaults to mongodb://localhost:27017).
-- DBNAME - Name of the databse to load and unload fixtures to (defaults to my-test-database).
+- DBNAME - Name of the database to load and unload fixtures to (defaults to my-test-database).
 
 Doesn't do what you want?
 Please fork the code and hack it to your heart's content ;)

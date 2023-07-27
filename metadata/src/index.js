@@ -84,11 +84,11 @@ async function main() {
     }
     
     if (!process.env.DBHOST) {
-        throw new Error("Please specify the databse host using environment variable DBHOST.");
+        throw new Error("Please specify the database host using environment variable DBHOST.");
     }
 
     if (!process.env.DBNAME) {
-        throw new Error("Please specify the databse name using environment variable DBNAME.");
+        throw new Error("Please specify the database name using environment variable DBNAME.");
     }
     
     if (!process.env.RABBIT) {
