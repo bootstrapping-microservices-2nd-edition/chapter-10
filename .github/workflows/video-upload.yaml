@@ -9,7 +9,7 @@ name: Deploy video-upload
 
 on:
   #
-  # Deploy the microservice on push to any branch of this code repository.
+  # Deploys the microservice on push to the specified subdirectory in the main branch of this code repository.
   #
   push: 
     branches:
