@@ -20,7 +20,7 @@ spec:
     spec:
       containers: 
       - name: mongodb
-        image: mongo:5.0.9
+        image: mongo:7.0.0
         imagePullPolicy: Always
 ---
 apiVersion: v1
