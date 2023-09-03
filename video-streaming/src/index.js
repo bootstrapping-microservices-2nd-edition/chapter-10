@@ -17,9 +17,9 @@ const RABBIT = process.env.RABBIT;
 // Application entry point.
 //
 async function main() {
-    const connection = await amqp.connect(RABBIT); // Connects to the RabbitMQ server.
+    const messagingConnection = await amqp.connect(RABBIT); // Connects to the RabbitMQ server.
     
-    const messageChannel = await connection.createChannel(); // Creates a RabbitMQ messaging channel.
+    const messageChannel = await messagingConnection.createChannel(); // Creates a RabbitMQ messaging channel.
     
     await messageChannel.assertExchange("viewed", "fanout"); // Asserts that we have a "viewed" exchange.
 
