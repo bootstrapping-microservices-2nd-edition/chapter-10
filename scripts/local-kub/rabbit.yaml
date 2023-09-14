@@ -38,7 +38,7 @@ spec:
     app: rabbit
   type: ClusterIP
   ports:
-    - name: http
+    - name: amqp
       protocol: TCP
       port: 5672
     - name: dashboard
