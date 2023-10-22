@@ -1,7 +1,6 @@
 const express = require("express");
 const mongodb = require("mongodb");
 const amqp = require('amqplib');
-const bodyParser = require("body-parser");
 
 //
 // Starts the microservice.
@@ -15,7 +14,7 @@ async function startMicroservice(dbHost, dbName, rabbitHost, port) {
     const messageChannel = await messagingConnection.createChannel(); // Creates a RabbitMQ messaging channel.
 
     const app = express();
-    app.use(bodyParser.json()); // Enable JSON body for HTTP requests.
+    app.use(express.json()); // Enable JSON body for HTTP requests.
 
 
     //
